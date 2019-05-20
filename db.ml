@@ -30,7 +30,7 @@ open Mysql
 
 (* 接続先のユーザ名とデータベースを決めておく *)
 (* let connect () = quick_connect ~database:"p_memo" ~password:"0405" ~user:"billie" () *)
-let db = quick_connect ~database:"p_memo" ~password:"0405" ~user:"billie" ~host:"bgn-003"()
+let db = quick_connect ~database:"p_memo" ~password:"0405" ~user:"billie" ~host:"lenovo" ()
 
 (* let db = connect () *)
 
@@ -74,3 +74,4 @@ let fold db sql f init =
   in
   loop init
   
+
