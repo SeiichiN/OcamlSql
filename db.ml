@@ -30,21 +30,21 @@ open Mysql
 
 (* 接続先のユーザ名とデータベースを決めておく *)
 (* let connect () = quick_connect ~database:"p_memo" ~password:"0405" ~user:"billie" () *)
-let db = quick_connect ~database:"p_memo" ~password:"0405" ~user:"billie" ()
+let db = quick_connect ~database:"address" ~password:"ykk" ~user:"ykk" ()
 
 (* let db = connect () *)
 
-let sql = "select * from memo"
+let sql = "select * from list"
 
 (* 最初に一行のデータが欲しいとき *)
 let first db sql =
   let r = Mysql.exec db sql in
   let col = Mysql.column r in
-  let row x = (col ~key:"name" ~row:x) in
+  let row x = (col ~key:"namae" ~row:x) in
   let rec loop r =
   match Mysql.fetch r with
     None -> []
-  | Some x -> row x :: loop r (* Some (col ~key:"name" ~row:x) *)
+  | Some x -> row x :: loop r (* Some (col ~key:"firstname" ~row:x) *)
   in
   loop r
 
@@ -74,3 +74,6 @@ let fold db sql f init =
   in
   loop init
   
+let _ =
+    first db sql
+
