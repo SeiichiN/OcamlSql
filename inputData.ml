@@ -40,3 +40,9 @@ let input_data () =
     } in
     person
 
+let make_insert_sql m =
+    let sql = "insert into table ( lastname, firstname, sei, namae, email, memo ) values ('" ^ m.lastname ^ "','" ^ m.firstname ^ "','" ^ m.sei ^ "','" ^ m.namae ^ "','" ^ m.email ^ "','" ^ m.memo ^ "')" in
+    sql;;
+
+make_insert_sql (input_data ())
+
