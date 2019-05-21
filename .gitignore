@@ -1,8 +1,13 @@
 *.ml~
-<<<<<<< HEAD
 *.sql
 *.txt
-=======
->>>>>>> 9df61fef7fc6016983bd7e75da8b3601ecb27f31
 *.dump
-
+xampp
+*.ml#
+address
+*.cmi
+*.cmx
+*.o
+*.cmo
+address.conf
+bakfile
