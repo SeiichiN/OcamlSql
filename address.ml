@@ -21,8 +21,9 @@ let tablename = assoc "tablename" conf
 and dbname =  assoc "dbname" conf
 and username =  assoc "username" conf
 and passwd = assoc "password" conf
+and hostname = assoc "hostname" conf
        
-let db = quick_connect ~database:dbname ~password:passwd ~user:username ()
+let db = quick_connect ~database:dbname ~password:passwd ~user:username ~host:hostname ()
 
 let sql = "select * from " ^ tablename
 
