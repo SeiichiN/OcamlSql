@@ -60,5 +60,7 @@ let _ =
     if no = 4
     then
         let sql = "select * from " ^ tablename in
-        listAll db sql
-
+        let allData = listAll db sql in
+        mkRecord allData
+    else
+        []
