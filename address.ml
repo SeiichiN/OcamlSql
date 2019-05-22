@@ -10,6 +10,9 @@ open Mysql
 #use "readfile.ml"
 #use "listAll.ml"
 #use "menu.ml"
+#use "type.ml"
+#use "disp.ml"
+#use "inputData.ml"
 
 let conf = read_conf "address.conf"
 
@@ -57,6 +60,19 @@ let fold db sql f init =
 
 let _ =
     let no = menu () in
+    match no with
+    1 -> 
+        let sql = make_insert_sql(input_data ()) in
+        sql
+    | 3 ->
+        let sql = "select * from " ^ tablename in
+        let allData = listAll db sql in
+        let addressList = mkRecord allData in
+        disp_address_list addressList
+    | _ ->
+        "bye"
+
+(*
     if no = 4
     then
         let sql = "select * from " ^ tablename in
@@ -64,3 +80,4 @@ let _ =
         mkRecord allData
     else
         []
+*)

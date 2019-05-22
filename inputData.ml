@@ -1,7 +1,7 @@
 (*
  * inputData.ml
  *)
-#use "type.ml"
+(* #use "type.ml" *)
 
 let input_data () =
     let f_name = ref ""
@@ -44,5 +44,5 @@ let make_insert_sql m =
     let sql = "insert into table ( lastname, firstname, sei, namae, email, memo ) values ('" ^ m.lastname ^ "','" ^ m.firstname ^ "','" ^ m.sei ^ "','" ^ m.namae ^ "','" ^ m.email ^ "','" ^ m.memo ^ "')" in
     sql;;
 
-make_insert_sql (input_data ())
+(* make_insert_sql (input_data ()) *)
 
