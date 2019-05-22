@@ -9,6 +9,7 @@ open Mysql
 
 #use "readfile.ml"
 #use "listAll.ml"
+#use "menu.ml"
 
 let conf = read_conf "address.conf"
 
@@ -25,8 +26,6 @@ and passwd = assoc "password" conf
 and hostname = assoc "hostname" conf
        
 let db = quick_connect ~database:dbname ~password:passwd ~user:username ~host:hostname ()
-
-let sql = "select * from " ^ tablename
 
 
 (* Mysql.mapを少し改造 *)
@@ -57,6 +56,9 @@ let fold db sql f init =
   
 
 let _ =
-    listAll db sql
-
+    let no = menu () in
+    if no = 4
+    then
+        let sql = "select * from " ^ tablename in
+        listAll db sql
 
