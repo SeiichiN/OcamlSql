@@ -64,7 +64,7 @@ let _ =
     1 -> 
         let sql = make_insert_sql(input_data ()) in
         sql
-    | 3 ->
+    | 4 ->
         let sql = "select * from " ^ tablename in
         let allData = listAll db sql in
         let addressList = mkRecord allData in
