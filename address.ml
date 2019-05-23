@@ -12,7 +12,6 @@ open Mysql
 #use "menu.ml"
 #use "type.ml"
 #use "disp.ml"
-#use "inputData.ml"
 
 let conf = read_conf "address.conf"
 
@@ -26,8 +25,10 @@ let tablename = assoc "tablename" conf
 and dbname =  assoc "dbname" conf
 and username =  assoc "username" conf
 and passwd = assoc "password" conf
-and hostname = assoc "hostname" conf
+and hostname = assoc "hostname" conf;
        
+#use "inputData.ml"
+
 let db = quick_connect ~database:dbname ~password:passwd ~user:username ~host:hostname ()
 
 
