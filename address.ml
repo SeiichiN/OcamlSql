@@ -56,28 +56,28 @@ let fold db sql f init =
 	loop (f l (col ~row:x))
   in
   loop init
-  
-
+ 
 let _ =
     let no = menu () in
     match no with
     1 -> 
-        let sql = make_insert_sql(input_data ()) in
-        sql
-    | 3 ->
+        let oneAddress = input_data() in
+        let st = "( firstname, lastname, sei, namae, email, memo )" in
+        let ml2values m = values [
+            ml2str m.firstname;
+            ml2str m.lastname;
+            ml2str m.sei;
+            ml2str m.namae;
+            ml2str m.email;
+            ml2str m.memo] in
+        let insert values = 
+            "insert into " ^ tablename ^ st ^  " values " ^ values in
+        ignore (exec db (insert (ml2values oneAddress)));
+        "data In!"
+    | 4 ->
         let sql = "select * from " ^ tablename in
         let allData = listAll db sql in
         let addressList = mkRecord allData in
         disp_address_list addressList
     | _ ->
         "bye"
-
-(*
-    if no = 4
-    then
-        let sql = "select * from " ^ tablename in
-        let allData = listAll db sql in
-        mkRecord allData
-    else
-        []
-*)

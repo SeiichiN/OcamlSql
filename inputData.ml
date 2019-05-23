@@ -41,7 +41,10 @@ let input_data () =
     person
 
 let make_insert_sql m =
-    let sql = "insert into table ( lastname, firstname, sei, namae, email, memo ) values ('" ^ m.lastname ^ "','" ^ m.firstname ^ "','" ^ m.sei ^ "','" ^ m.namae ^ "','" ^ m.email ^ "','" ^ m.memo ^ "')" in
+    let sql = "insert into " ^ tablename ^ " ( lastname, firstname, sei, namae, email, memo ) 
+    values (" ^ (ml2str m.lastname) ^ "," ^ (ml2str m.firstname) ^ "," 
+    ^ (ml2str m.sei) ^ "," ^ (ml2str m.namae) ^ "," ^ (ml2str m.email)
+    ^ "," ^ (ml2str m.memo) ^ ")" in
     sql;;
 
 (* make_insert_sql (input_data ()) *)
