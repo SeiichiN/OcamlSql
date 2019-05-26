@@ -22,7 +22,7 @@ let pr_menu () =
 let menu () =
     let s = ref false 
     and num = ref 999 in
-    while (!s == false) do
+    while (!s = false) do
         try
             num := int_of_string (pr_menu());
         if (!num >= 0 && !num < 5)

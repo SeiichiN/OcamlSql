@@ -7,10 +7,9 @@
 
 open Mysql
 
+#use "type.ml"
 #use "readfile.ml"
 #use "listAll.ml"
-#use "menu.ml"
-#use "type.ml"
 #use "disp.ml"
 
 let conf = read_conf "address.conf"
@@ -27,9 +26,81 @@ and username =  assoc "username" conf
 and passwd = assoc "password" conf
 and hostname = assoc "hostname" conf;
        
+#use "syori.ml"
 #use "inputData.ml"
 
 let db = quick_connect ~database:dbname ~password:passwd ~user:username ~host:hostname ()
+
+
+let syori_tuika () =
+    let oneAddress = input_data() in
+    let st = "( firstname, lastname, sei, namae, email, memo )" in
+    let ml2values m = values [
+        ml2str m.firstname;
+            ml2str m.lastname;
+            ml2str m.sei;
+            ml2str m.namae;
+            ml2str m.email;
+            ml2str m.memo] in
+    let insert values = 
+        "insert into " ^ tablename ^ st ^  " values " ^ values in
+    ignore (exec db (insert (ml2values oneAddress)))
+
+let syori_ichiran () =
+    let sql = "select * from " ^ tablename in
+    let allData = listAll db sql in
+    let addressList = mkRecord allData in
+    ignore (disp_address_list addressList)
+
+    (*
+let field_list = [
+    (1, "id"); (2, "firstname"); (3, "lastname"); (4, "sei"); (5, "namae");
+    (6, "email"); (7, "memo")
+    ]
+
+let select_list = [
+    (1, "id番号 > "); (2, "FirstName > "); (3, "LastName > "); (4, "姓 > ");
+    (5, "名前 > "); (6, "メールアドレス > ") ]
+*)
+
+let get_user_input n mes =
+    print_string mes
+    ; flush stdout
+    ; let user_string = input_line stdin in
+    user_string
+   
+
+let syori_etsuran () =
+    let num = etsuran () in   (* 閲覧・検索・訂正メニューからユーザーの選択した番号を得る *)
+    if num > 0
+    then
+        let fieldname = (assoc num field_list) in
+        let message = (assoc num select_list) in
+        let user_str = (get_user_input num message) in
+        let sql = "select * from " ^ tablename ^ " where " ^ fieldname ^ " like '%" ^ user_str ^ "%'" in
+        let allData = listAll db sql in  (* sqlを実行 データのリストを得る *)
+        let aList = mkRecord allData in   (* レコード型のリストに変換する *)
+        if (List.length aList) > 1 then ignore (disp_select_list aList);
+        let addressList = reselect aList in  (* リストが2つ以上あれば、１つに絞る *)
+        ignore (disp_select_list addressList);
+        let num2 = edit () in
+        if num2 > 0
+        then
+            let newData = retouch_data num2 addressList in
+            print_endline newData
+
+
+let _ =
+    let no = ref 9 in
+    while (!no > 0) do
+        no := menu ();
+        match !no with
+        1 -> syori_tuika ()
+        | 2 -> syori_etsuran ()
+        | 4 -> syori_ichiran ()
+        | _ ->
+            print_endline "bye"
+    done
 
 
 (* Mysql.mapを少し改造 *)
@@ -57,28 +128,3 @@ let fold db sql f init =
 	loop (f l (col ~row:x))
   in
   loop init
- 
-let _ =
-    let no = menu () in
-    match no with
-    1 -> 
-        let oneAddress = input_data() in
-        let st = "( firstname, lastname, sei, namae, email, memo )" in
-        let ml2values m = values [
-            ml2str m.firstname;
-            ml2str m.lastname;
-            ml2str m.sei;
-            ml2str m.namae;
-            ml2str m.email;
-            ml2str m.memo] in
-        let insert values = 
-            "insert into " ^ tablename ^ st ^  " values " ^ values in
-        ignore (exec db (insert (ml2values oneAddress)));
-        "data In!"
-    | 4 ->
-        let sql = "select * from " ^ tablename in
-        let allData = listAll db sql in
-        let addressList = mkRecord allData in
-        disp_address_list addressList
-    | _ ->
-        "bye"
