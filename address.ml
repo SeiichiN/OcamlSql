@@ -52,16 +52,6 @@ let syori_ichiran () =
     let addressList = mkRecord allData in
     ignore (disp_address_list addressList)
 
-    (*
-let field_list = [
-    (1, "id"); (2, "firstname"); (3, "lastname"); (4, "sei"); (5, "namae");
-    (6, "email"); (7, "memo")
-    ]
-
-let select_list = [
-    (1, "id番号 > "); (2, "FirstName > "); (3, "LastName > "); (4, "姓 > ");
-    (5, "名前 > "); (6, "メールアドレス > ") ]
-*)
 
 let get_user_input n mes =
     print_string mes

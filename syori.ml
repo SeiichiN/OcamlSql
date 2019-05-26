@@ -117,8 +117,16 @@ let reselect l =
 let r1 = {id=1; firstname="F"; lastname="L"; sei="あ"; namae="い"; email="e"; memo="m"}
 let r2 = {id=2; firstname="G"; lastname="H"; sei="か"; namae="き"; email="l"; memo="n"}
 
+(*
+ * どれかのフィールドを番号で指定し、新しい値を入力する関数
+ *
+ * @param: n -- 1) firstname,  2) lastname, 3) sei, 4) namae
+ *              5) email       6) memo
+ *         l -- addressList [{id, firstname,...., memo}{ .... }] -- address list
+ *
+ * @return: newValue
+ *)
 let retouch_data n l =
-    print_endline (string_of_int n);
     let oneR = List.hd l in
     let fldname = get_field (n + 1) oneR in
     let mes_str = "現在の設定： " ^ (assoc (n+1) select_list) ^ " = " ^ fldname in
