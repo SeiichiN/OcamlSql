@@ -26,9 +26,8 @@ let pr_menu () =
     print_newline ();
     print_endline "------------- アドレス帳 ---------------";
     print_endline "|  1) データの追加                     |";
-    print_endline "|  2) データの閲覧・検索・訂正         |";
-    print_endline "|  3) データの削除                     |";
-    print_endline "|  4) データの一覧                     |";
+    print_endline "|  2) データの検索・訂正・削除         |";
+    print_endline "|  3) データの一覧                     |";
     print_endline "|  0) 終了                             |";
     print_endline "| -----------------------------------  |";
     print_endline "| Copyright (c) 2019 Seiichi Nukayama  |";
@@ -41,7 +40,7 @@ let pr_menu () =
     bango
 
 let pr_edit () =
-    print_string "1) 訂正   0) もどる > ";
+    print_string "1) 訂正   2) 削除   0) もどる > ";
     flush stdout;
     let bango = input_line stdin in
     bango
@@ -61,17 +60,27 @@ let pr_reselect n =
   let bango = input_line stdin in
   bango
 
+let pr_delete_kakunin () =
+    print_string "本当に削除してよろしいですか？ (y/n) > ";
+    flush stdout;
+    let yesno = String.lowercase_ascii (input_line stdin) in
+    if yesno = "y"
+    then let bango = "1" in bango
+    else let bango = "0" in bango
+
+
 (*
  * syori -- 画面にメニューを表示し、ユーザーに数字キーを入力させて
  *          処理を選択させる
  * @param: int max -- メニューの最大番号
  *         func f  -- 画面にメニューを表示し、ユーザーから数字を得る関数
+ *                    この関数は数字を文字列で返すようにする
  *)
 let syori max f =
     let num = ref (max + 1) in
     while ( !num > max || !num < 0 ) do
         try
-            num := int_of_string (f ())
+            num := int_of_string (f ())  (* 文字列を数値に変換 *)
             ; if ( !num > max || !num < 0 )
             then print_endline ("0 〜 " ^ (string_of_int max) ^ " の数字です。")
             else ()
@@ -91,6 +100,11 @@ let edit () =
     if num = 1 
     then let item_no = syori 6 pr_edit_select in item_no
     else 0
+(*
+        if num = 2
+        then let item_no = syori 1 pr_delete_kakunin in item_no
+        else 0
+*)
 
 (* f -- 条件を記述した関数 *)
 let rec myfind f = function

@@ -6,7 +6,7 @@
 
 let onedata = ref ""
 
-let rec disp_address_list = function
+let rec print_ichiran = function
     [] -> ""
     | m :: rest ->
             onedata := 
@@ -17,7 +17,13 @@ let rec disp_address_list = function
             ^ " " ^ m.email
             ^ " " ^ m.memo;
             print_endline !onedata;
-            disp_address_list rest
+            print_ichiran rest
+
+let disp_address_list l =
+    print_endline "------------------------ 一覧 -------------------------";
+    ignore (print_ichiran l);
+    print_endline "-------------------------------------------------------"
+
 
 (*
  * addressタイプの要素でできた（１つの）リストを表示する

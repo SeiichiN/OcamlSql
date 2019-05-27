@@ -88,7 +88,7 @@ let _ =
         match !no with
         1 -> syori_tuika ()
         | 2 -> syori_etsuran ()
-        | 4 -> syori_ichiran ()
+        | 3 -> syori_ichiran ()
         | _ ->
             print_endline "bye"
     done
