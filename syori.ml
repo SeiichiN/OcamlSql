@@ -117,6 +117,7 @@ let reselect l =
 let r1 = {id=1; firstname="F"; lastname="L"; sei="あ"; namae="い"; email="e"; memo="m"}
 let r2 = {id=2; firstname="G"; lastname="H"; sei="か"; namae="き"; email="l"; memo="n"}
 
+
 (*
  * どれかのフィールドを番号で指定し、新しい値を入力する関数
  *
@@ -134,4 +135,4 @@ let retouch_data n l =
     print_string "新しい値 > ";
     flush stdout;
     let newValue = input_line stdin in
-    newValue
+    (oneR.id, fldname, newValue)

@@ -76,8 +76,9 @@ let syori_etsuran () =
         let num2 = edit () in
         if num2 > 0
         then
-            let newData = retouch_data num2 addressList in
-            print_endline newData
+            let (id', fieldname', newData) = retouch_data num2 addressList in
+            let sql = "update " ^ tablename ^ " set " ^ fieldname' ^ " = " ^ (ml2str newData) ^ " where id = " ^ (string_of_int id') in
+            print_endline sql
 
 
 let _ =
