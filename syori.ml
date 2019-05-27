@@ -129,8 +129,10 @@ let r2 = {id=2; firstname="G"; lastname="H"; sei="か"; namae="き"; email="l"; 
  *)
 let retouch_data n l =
     let oneR = List.hd l in
-    let fldname = get_field (n + 1) oneR in
-    let mes_str = "現在の設定： " ^ (assoc (n+1) select_list) ^ " = " ^ fldname in
+    let fldvalue = get_field (n + 1) oneR in
+    let fldmessage = assoc (n+1) select_list in
+    let fldname = assoc (n+1) field_list in
+    let mes_str = "現在の設定： " ^ fldmessage ^ " = " ^ fldvalue in
     print_endline mes_str;
     print_string "新しい値 > ";
     flush stdout;

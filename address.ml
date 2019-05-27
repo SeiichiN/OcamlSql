@@ -78,7 +78,7 @@ let syori_etsuran () =
         then
             let (id', fieldname', newData) = retouch_data num2 addressList in
             let sql = "update " ^ tablename ^ " set " ^ fieldname' ^ " = " ^ (ml2str newData) ^ " where id = " ^ (string_of_int id') in
-            print_endline sql
+            ignore (exec db sql)
 
 
 let _ =
