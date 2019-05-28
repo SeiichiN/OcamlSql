@@ -26,8 +26,9 @@ let pr_menu () =
     print_newline ();
     print_endline "------------- アドレス帳 ---------------";
     print_endline "|  1) データの追加                     |";
-    print_endline "|  2) データの検索・訂正・削除         |";
+    print_endline "|  2) データの検索・訂正               |";
     print_endline "|  3) データの一覧                     |";
+    print_endline "|  4) 削除処理                         |";
     print_endline "|  0) 終了                             |";
     print_endline "| -----------------------------------  |";
     print_endline "| Copyright (c) 2019 Seiichi Nukayama  |";
@@ -40,7 +41,7 @@ let pr_menu () =
     bango
 
 let pr_edit () =
-    print_string "1) 訂正   2) 削除   0) もどる > ";
+    print_string "1) 訂正    0) もどる > ";
     flush stdout;
     let bango = input_line stdin in
     bango
@@ -65,9 +66,14 @@ let pr_delete_kakunin () =
     flush stdout;
     let yesno = String.lowercase_ascii (input_line stdin) in
     if yesno = "y"
-    then let bango = "1" in bango
-    else let bango = "0" in bango
+    then true  (* 削除OK *)
+    else false  (* NG *)
 
+let pr_delete_id () =
+    print_string "削除したいデータの id > ";
+    flush stdout;
+    let bango = input_line stdin in
+    bango
 
 (*
  * syori -- 画面にメニューを表示し、ユーザーに数字キーを入力させて
@@ -75,6 +81,7 @@ let pr_delete_kakunin () =
  * @param: int max -- メニューの最大番号
  *         func f  -- 画面にメニューを表示し、ユーザーから数字を得る関数
  *                    この関数は数字を文字列で返すようにする
+ * @return: !num -- 数字
  *)
 let syori max f =
     let num = ref (max + 1) in
@@ -100,11 +107,6 @@ let edit () =
     if num = 1 
     then let item_no = syori 6 pr_edit_select in item_no
     else 0
-(*
-        if num = 2
-        then let item_no = syori 1 pr_delete_kakunin in item_no
-        else 0
-*)
 
 (* f -- 条件を記述した関数 *)
 let rec myfind f = function
@@ -152,3 +154,15 @@ let retouch_data n l =
     flush stdout;
     let newValue = input_line stdin in
     (oneR.id, fldname, newValue)
+
+(*
+ * 削除処理
+ * @return: delete_id -- 削除するid番号（数値）
+ *          0         -- 削除しない
+ *)
+let select_delete_id () =
+    let delete_id = syori 99 pr_delete_id in
+    if (pr_delete_kakunin())
+    then delete_id
+    else 0
+

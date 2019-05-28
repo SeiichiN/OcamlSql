@@ -61,7 +61,7 @@ let get_user_input n mes =
    
 
 let syori_etsuran () =
-    let num = etsuran () in   (* 閲覧・検索・訂正メニューからユーザーの選択した番号を得る *)
+    let num = etsuran () in   (* 検索・訂正メニューからユーザーの選択した番号を得る *)
     if num > 0
     then
         let fieldname = (assoc num field_list) in
@@ -80,6 +80,8 @@ let syori_etsuran () =
             let sql = "update " ^ tablename ^ " set " ^ fieldname' ^ " = " ^ (ml2str newData) ^ " where id = " ^ (string_of_int id') in
             ignore (exec db sql)
 
+let syori_delete () =
+    print_endline (string_of_int (select_delete_id()))
 
 let _ =
     let no = ref 9 in
@@ -89,12 +91,14 @@ let _ =
         1 -> syori_tuika ()
         | 2 -> syori_etsuran ()
         | 3 -> syori_ichiran ()
+        | 4 -> syori_delete ()
         | _ ->
             print_endline "bye"
     done
 
 
 (* Mysql.mapを少し改造 *)
+    (*
 let map db sql build =
   let r = Mysql.exec db sql in
   let col = Mysql.column r in
@@ -106,8 +110,10 @@ let map db sql build =
 	loop (build (col ~row:x) :: l)
   in
   loop []
+*)
 
 (* mapがあるならfoldも *)
+(*
 let fold db sql f init =
   let r = Mysql.exec db sql in
   let col = Mysql.column r in
@@ -119,3 +125,4 @@ let fold db sql f init =
 	loop (f l (col ~row:x))
   in
   loop init
+  *)
