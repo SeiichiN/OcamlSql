@@ -81,7 +81,10 @@ let syori_etsuran () =
             ignore (exec db sql)
 
 let syori_delete () =
-    print_endline (string_of_int (select_delete_id()))
+    let delete_id = string_of_int (select_delete_id()) in
+    let sql = "delete from " ^ tablename ^ " where id = " ^ delete_id in
+    ignore (exec db sql);
+    print_endline ("id= " ^ delete_id ^ " のデータを削除しました。")
 
 let _ =
     let no = ref 9 in
