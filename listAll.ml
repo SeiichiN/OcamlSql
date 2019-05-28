@@ -1,5 +1,6 @@
 (* listAll.ml *)
 
+open Mysql
 
 (* 1件のレコードをタプルにして、全レコードをタプルのリストにする *)
 let listAll db sql =
