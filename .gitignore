@@ -11,3 +11,5 @@ address
 *.cmo
 address.conf
 bakfile
+'NetrwTreeListing 1'
+NetrwTreeListing 1
