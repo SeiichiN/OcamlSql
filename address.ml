@@ -3,6 +3,9 @@
    
    $Id: address.ml,v 0.1 2019/05/21 Seiichi Nukayama $
    Copyright (c) 2019 Seiichi Nukayama, All Rights Reserved.
+
+   HowTo compilation
+   $ ocamlfind ocamlopt -o address -linkpkg -package mysql,str address.ml
 *)
 
 open Str
