@@ -140,7 +140,7 @@ let rec print_ichiran = function
     [] -> ""
     | m :: rest ->
       onedata := Printf.sprintf 
-          "%-3s %-12s %-12s %-4s %-4s %-20s %-50s" 
+          "%-3s %-12s %-12s %-8s %-8s %-26s %-20s" 
             (string_of_int m.id)
             m.firstname
             m.lastname
@@ -151,10 +151,15 @@ let rec print_ichiran = function
       print_endline !onedata;
             print_ichiran rest
 
+let rec rep s n =
+    if n = 0 then ""
+    else
+        s ^ (rep s (n-1))
+
 let disp_address_list l =
-    print_endline "------------------------ 一覧 -------------------------";
+    print_endline ((rep "-" 40) ^ " 一覧 " ^ (rep "-" 40));
     ignore (print_ichiran l);
-    print_endline "-------------------------------------------------------"
+    print_endline (rep "-" 86)
 
 
 (*
@@ -222,6 +227,7 @@ let pr_sentaku () =
   let bango = (input_line stdin) in bango
 
 let pr_menu () =
+    print_string "\027c";
     print_newline ();
     print_endline "------------- アドレス帳 ---------------";
     print_endline "|  1) データの追加                     |";
@@ -269,7 +275,7 @@ let pr_delete_kakunin () =
     else false  (* NG *)
 
 let pr_delete_id () =
-    print_string "削除したいデータの id > ";
+    print_string "削除したいデータの id (0:中止) > ";
     flush stdout;
     let bango = input_line stdin in
     bango
@@ -296,9 +302,9 @@ let syori max f =
     done
     ; !num
 
-let etsuran () = syori 6 pr_sentaku    
+let etsuran () = let bango = syori 6 pr_sentaku in bango    
 
-let menu () = syori 4 pr_menu
+let menu () = let bango = syori 4 pr_menu in bango
 
 (* 修正したい項目を番号で返す。 0 の場合は中止 *)
 let edit () = 
@@ -354,6 +360,9 @@ let retouch_data n l =
     let newValue = input_line stdin in
     (oneR.id, fldname, newValue)
 
+
+
+
 (*
  * 削除処理
  * @return: delete_id -- 削除するid番号（数値）
@@ -361,8 +370,11 @@ let retouch_data n l =
  *)
 let select_delete_id () =
     let delete_id = syori 99 pr_delete_id in
-    if (pr_delete_kakunin())
-    then delete_id
+    if delete_id > 0
+    then
+        if (pr_delete_kakunin() = true)
+        then delete_id
+        else 0
     else 0
 
 
@@ -435,21 +447,33 @@ let syori_tuika () =
             ml2str m.memo] in
     let insert values = 
         "insert into " ^ tablename ^ st ^  " values " ^ values in
-    ignore (exec db (insert (ml2values oneAddress)))
-
-let syori_ichiran () =
-    let sql = "select * from " ^ tablename in
-    let allData = listAll db sql in
-    let addressList = mkRecord allData in
-    ignore (disp_address_list addressList)
+    ignore (Mysql.exec db (insert (ml2values oneAddress)))
 
 
-let get_user_input n mes =
+let get_user_input mes =
     print_string mes
     ; flush stdout
     ; let user_string = input_line stdin in
     user_string
    
+let syori_ichiran () =
+    let sql = "select * from " ^ tablename in
+    let allData = listAll db sql in
+    let addressList = mkRecord allData in
+    ignore (disp_address_list addressList);
+    let s = get_user_input "Enterキーを押してください > " in
+    if (s = "") then () else ()
+
+
+(*
+ * id番号のデータを抽出する
+ *)
+let select_one n =
+    let sql = "select * from " ^ tablename ^ " where id = " ^ (string_of_int n) in
+    let l = listAll db sql in
+    let record = mkRecord l in
+    ignore (print_ichiran record)
+
 
 let syori_etsuran () =
     let num = etsuran () in   (* 検索・訂正メニューからユーザーの選択した番号を得る *)
@@ -457,7 +481,7 @@ let syori_etsuran () =
     then
         let fieldname = (assoc num field_list) in
         let message = (assoc num select_list) in
-        let user_str = (get_user_input num message) in
+        let user_str = (get_user_input message) in
         let sql = "select * from " ^ tablename ^ " where " ^ fieldname ^ " like '%" ^ user_str ^ "%'" in
         let allData = listAll db sql in  (* sqlを実行 データのリストを得る *)
         let aList = mkRecord allData in   (* レコード型のリストに変換する *)
@@ -472,10 +496,14 @@ let syori_etsuran () =
             ignore (exec db sql)
 
 let syori_delete () =
-    let delete_id = string_of_int (select_delete_id()) in
-    let sql = "delete from " ^ tablename ^ " where id = " ^ delete_id in
-    ignore (exec db sql);
-    print_endline ("id= " ^ delete_id ^ " のデータを削除しました。")
+    let delete_id = select_delete_id() in
+    if delete_id > 0
+    then
+        let sql = "delete from " ^ tablename ^ " where id = " ^ (string_of_int delete_id) in
+        ignore (exec db sql);
+        print_endline ("id= " ^ (string_of_int delete_id) ^ " のデータを削除しました。")
+    else
+        ()
 
 let _ =
     let no = ref 9 in
