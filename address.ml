@@ -139,14 +139,16 @@ let onedata = ref ""
 let rec print_ichiran = function
     [] -> ""
     | m :: rest ->
-            onedata := 
-            (string_of_int m.id) ^ " " ^ m.firstname
-            ^ " " ^ m.lastname
-            ^ " " ^ m.sei
-            ^ " " ^ m.namae
-            ^ " " ^ m.email
-            ^ " " ^ m.memo;
-            print_endline !onedata;
+      onedata := Printf.sprintf 
+          "%-3s %-12s %-12s %-4s %-4s %-20s %-50s" 
+            (string_of_int m.id)
+            m.firstname
+            m.lastname
+            m.sei
+            m.namae
+            m.email
+            m.memo;
+      print_endline !onedata;
             print_ichiran rest
 
 let disp_address_list l =
