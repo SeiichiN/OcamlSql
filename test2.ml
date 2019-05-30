@@ -5,19 +5,26 @@
 open Printf
 module P = Mysql.Prepared
 
-let s = String.copy
+(* let s = String.copy *)
+
+let dbname = "test"
+and username = "root"
+and hostname = "bgn-003"
+and tblname = "test"
+
 
 (* 接続 *)
-let db = Mysql.quick_connect ~database:(s "test") ~user:(s "root") ~host:(s "bgn-003") ()
+let db = Mysql.quick_connect ~database:dbname ~user:username ~host:hostname ()
 
 
 (* テーブル作成 *)
-let (_:Mysql.result) = Mysql.exec db (s "CREATE TABLE IF NOT EXISTS test (id INT, v VARCHAR(10)) ENGINE=MEMORY")
+let (_:Mysql.result) = Mysql.exec db "CREATE TABLE IF NOT EXISTS test (id INT, v VARCHAR(10)) ENGINE=MEMORY"
 
 (* データの挿入 *)
 let () =
   (* Mysql.Prepared の create メソッドを使うみたい *)
-  let insert = P.create db (s "INSERT INTO test VALUES (?,?)") in
+  (* insert は、statement オブジェクトみたい *)
+  let insert = P.create db "INSERT INTO test VALUES (?,?)" in
   for i = 10 to 15 do
     (* Mysql.Prepared の execute メソッドで、insert に配列を渡す *)
     ignore (P.execute insert [|string_of_int i; sprintf "value %d" i|])
@@ -38,20 +45,22 @@ let rec loop t =
   | None -> ()
 
 let () =
-  let select = P.create db (s "SELECT * FROM test WHERE id > ?") in
+  (* selectも statement オブジェクトみたい *)
+  let select = P.create db "SELECT * FROM test WHERE id > ?" in
   print_endline "> 13";
-  loop (P.execute select [|s "13"|]);
+  loop (P.execute select [|"13"|]);
   print_endline "> 19";
-  loop (P.execute select [|s "19"|]);
+  loop (P.execute select [|"19"|]);
   print_endline "> 20";
-  loop (P.execute select [|s "20"|]);
+  loop (P.execute select [|"20"|]);
   P.close select;
   print_endline "done all";
   ()
 
-let (_:Mysql.result) = Mysql.exec db (s "DROP TABLE test")
+(*
+let (_:Mysql.result) = Mysql.exec db "DROP TABLE test"
 
 
 (* 接続解除 *)
 let () = Mysql.disconnect db
-
+*)
